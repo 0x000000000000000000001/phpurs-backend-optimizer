@@ -123,6 +123,7 @@ runSnapshotTests { accept, filter, traceIdents } = do
         { directives
         , analyzeCustom: \_ _ -> Nothing
         , foreignSemantics: Map.union coreForeignSemantics esForeignSemantics
+        , onSkipModule: \_ _ -> pure Nothing
         , onCodegenModule: \build (Module { name: ModuleName name, path }) backendMod optimizationSteps -> do
             let
               formatted =
