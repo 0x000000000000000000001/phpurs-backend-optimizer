@@ -940,9 +940,15 @@ snocSpine spine = case _ of
     Array.snoc spine other
 
 envForGroup :: Env -> EvalRef -> InlineAccessor -> Array (Qualified Ident) -> Env
-envForGroup env ref acc group
-  | Array.null group = env
-  | otherwise = addStop env ref acc
+envForGroup (Env e) ref acc group =
+  let
+    moduleName = case ref of
+      EvalExtern (Qualified (Just mn) _) -> mn
+      _ -> e.currentModule
+    newEnv = Env e { locals = [], currentModule = moduleName }
+  in
+    if Array.null group then newEnv
+    else addStop newEnv ref acc
 
 evalExternFromImpl :: Env -> Qualified Ident -> Tuple BackendAnalysis ExternImpl -> Array ExternSpine -> Maybe BackendSemantics
 evalExternFromImpl env@(Env e) qual (Tuple analysis impl) spine = case spine of
