@@ -942,9 +942,10 @@ snocSpine spine = case _ of
 envForGroup :: Env -> EvalRef -> InlineAccessor -> Array (Qualified Ident) -> Env
 envForGroup (Env e) ref acc group =
   let
-    newEnv = case ref of
-      EvalExtern (Qualified (Just mn) _) -> Env e { locals = [], currentModule = mn }
-      _ -> Env e
+    moduleName = case ref of
+      EvalExtern (Qualified (Just mn) _) -> mn
+      _ -> e.currentModule
+    newEnv = Env e { locals = [], currentModule = moduleName }
   in
     if Array.null group then newEnv
     else addStop newEnv ref acc
