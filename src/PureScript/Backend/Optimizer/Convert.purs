@@ -418,7 +418,7 @@ toBackendExpr = case _ of
       Qualified (Just mn) ident | mn == currentModule, Just lvl <- Map.lookup ident toLevel ->
         buildM (Local (Just ident) lvl)
       Qualified (Just (ModuleName "Prim")) (Ident "undefined") ->
-        buildM (Var (Qualified (Just (ModuleName "Prim")) (Ident "undefined")))
+        buildM PrimUndefined
       Qualified Nothing ident ->
         buildM (Var (Qualified (Just currentModule) ident))
       _ ->
