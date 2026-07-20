@@ -184,11 +184,11 @@ decodeExpr decAnn json = do
     "Constructor" -> do
       tyn <- getField decodeProperName obj "typeName"
       con <- getField decodeIdent obj "constructorName"
-      is <- getField (decodeArray decodeString) obj "fieldNames"
+      is <- getField (decodeArray decodeStringLiteral) obj "fieldNames"
       pure $ ExprConstructor ann tyn con is
     "Accessor" -> do
       e <- getField (decodeExpr decAnn) obj "expression"
-      f <- getField decodeString obj "fieldName"
+      f <- getField decodeStringLiteral obj "fieldName"
       pure $ ExprAccessor ann e f
     "ObjectUpdate" -> do
       e <- getField (decodeExpr decAnn) obj "expression"
@@ -262,7 +262,7 @@ decodeLiteral dec json = do
   typ <- getField decodeString obj "literalType"
   case typ of
     "IntLiteral" ->
-      LitInt <$> getField decodeInt obj "value"
+      LitInt <<< unsafeCoerce <$> getField decodeNumber obj "value"
     "NumberLiteral" ->
       LitNumber <$> getField decodeNumber obj "value"
     "StringLiteral" ->
@@ -288,7 +288,7 @@ decodeRecord = decodeArray <<< decodeProp
     arr <- decodeJArray json
     case arr of
       [ a, b ] -> do
-        prop <- decodeString a
+        prop <- decodeStringLiteral a
         value <- decoder b
         pure $ Prop prop value
       _ ->

@@ -137,6 +137,9 @@ usedTopLevel (TcoAnalysis { usages }) = usages
 noTcoRole :: TcoRole
 noTcoRole = { joins: [], isLoop: false }
 
+getTcoRole :: TcoAnalysis -> TcoRole
+getTcoRole (TcoAnalysis s) = s.role
+
 hasTcoRole :: TcoRole -> Boolean
 hasTcoRole { joins, isLoop } = isLoop || not (Array.null joins)
 
