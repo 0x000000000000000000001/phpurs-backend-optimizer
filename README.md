@@ -1,4 +1,4 @@
-# purescript-backend-optimizer
+# phpurs-backend-optimizer
 
 An optimizing backend toolkit for PureScript's CoreFn.
 
